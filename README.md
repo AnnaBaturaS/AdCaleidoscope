@@ -72,7 +72,7 @@ Open http://localhost:3000
 graph TB
     subgraph " "
         A["🏢<br/><b>Brand Selection</b><br/>Choose from 8 brands"]
-        B["🤖<br/><b>AI Brief Generation</b><br/>Nova Pro creates briefs"]
+        B["📝<br/><b>Brief Creation</b><br/>Generate custom prompts"]
         C["🎨<br/><b>Content Creation</b><br/>Nova Canvas & Reel"]
         D["📊<br/><b>Performance Analytics</b><br/>Insights & optimization"]
     end

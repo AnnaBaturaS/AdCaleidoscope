@@ -86,9 +86,10 @@ Want to see AdCaleidoscope in action? Follow this quick demo:
 1. **Start the app**: `npm run dev`
 2. **Explore Brand Books**: Navigate to `/brandbooks` and browse 8 detailed brand profiles
 3. **Create a Brief**: Go to `/briefs/new` and select "Business Empire" or any brand
-4. **See Smart Matching**: Watch AI match relevant creatives by keywords
-5. **Generate**: Click "Generate from Brief" to see Nova Pro in action
-6. **Analyze Performance**: Check `/patterns` for comprehensive analytics dashboard
+4. **See Smart Matching**: Watch keyword-based matching find relevant creatives
+5. **Generate Prompt**: Create custom AI prompt for content generation
+6. **Generate Content**: Click "Generate" to create images/videos with Nova Canvas/Reel
+7. **Analyze Performance**: Check `/patterns` for comprehensive analytics dashboard
 
 
 

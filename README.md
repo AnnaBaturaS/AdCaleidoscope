@@ -69,16 +69,23 @@ Open http://localhost:3000
 ## 🎯 User Journey
 
 ```mermaid
-flowchart LR
-    A[🏢 Brand Selection] --> B[📝 Brief Generation]
-    B --> C[🎨 Content Creation]
-    C --> D[📊 Analytics]
-    D --> A
+graph TB
+    subgraph " "
+        A["🏢<br/><b>Brand Selection</b><br/>Choose from 8 brands"]
+        B["🤖<br/><b>AI Brief Generation</b><br/>Nova Pro creates briefs"]
+        C["🎨<br/><b>Content Creation</b><br/>Nova Canvas & Reel"]
+        D["📊<br/><b>Performance Analytics</b><br/>Insights & optimization"]
+    end
     
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#ffeaa7
-    style D fill:#e8f5e8
+    A --> B
+    B --> C
+    C --> D
+    D -.-> A
+    
+    style A fill:#e8f4fd,stroke:#1976d2,stroke-width:3px
+    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    style C fill:#fff8e1,stroke:#f57c00,stroke-width:3px
+    style D fill:#e8f5e8,stroke:#388e3c,stroke-width:3px
 ```
 
 

@@ -89,7 +89,7 @@ Want to see AdCaleidoscope in action? Follow this quick demo:
 4. **See Smart Matching**: Watch keyword-based matching find relevant creatives
 5. **Generate Prompt**: Create custom AI prompt for content generation
 6. **Generate Content**: Click "Generate" to create images/videos with Nova Canvas/Reel
-7. **Analyze Performance**: Check `/patterns` for comprehensive analytics dashboard
+7. **View Dashboard**: Check `/patterns` for mock performance data visualization
 
 
 

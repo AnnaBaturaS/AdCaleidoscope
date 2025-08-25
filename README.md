@@ -31,8 +31,7 @@ Built specifically to showcase the power of **Amazon Nova models** in a real-wor
 - **Analytics**: In-memory analytics with comprehensive mock data  
 - **Infrastructure**: AWS Bedrock (real AI) + optional LocalStack (dev)
 - **Storage**: Hybrid local files + S3 with smart switching
-- **UI**: shadcn/ui components + Monaco Editor
-- **Playables**: MRAID 3.0 sandbox with interactive games
+- **UI**: shadcn/ui components
 
 
 ## 🚀 Quick Start
@@ -65,30 +64,6 @@ Open http://localhost:3000
 
 
 
-## 📁 Project Structure
-
-```
-src/
-├── app/
-│   ├── dashboard/           # KPIs and overview
-│   ├── library/            # Creative management
-│   ├── briefs/            # Brief builder with Monaco Editor
-│   ├── playground/        # MRAID sandbox
-│   ├── patterns/          # Pattern analysis
-│   ├── experiments/       # A/B testing
-│   ├── settings/          # Provider configurations
-│   └── api/
-│       ├── brief/         # Nova Pro integration
-│       ├── generate/      # Nova Canvas/Reel
-│       ├── analytics/     # Analytics endpoints
-│       └── upload-url/    # S3 presigned URLs
-├── lib/
-│   ├── aws.ts            # AWS SDK clients with LOCAL/CLOUD switching
-│   ├── analytics/        # Analytics integration
-│   ├── providers/        # AI generation providers
-│   └── utils/           # S3 upload, schemas, templates
-└── components/          # Reusable UI components
-```
 
 
 ## 🎯 User Journey

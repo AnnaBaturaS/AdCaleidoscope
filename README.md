@@ -94,27 +94,16 @@ src/
 ## 🎯 User Journey
 
 ```mermaid
-graph TD
-    A[🏢 Choose Brand<br/>Select from 8 detailed<br/>brand profiles] --> B[🎯 Smart Matching<br/>AI finds relevant creatives<br/>by keywords & demographics]
-    
-    B --> C[📝 Generate Brief<br/>Nova Pro creates<br/>comprehensive brief]
-    
-    C --> D{🎨 Create Content}
-    D --> E[🖼️ Nova Canvas<br/>High-quality images]
-    D --> F[🎬 Nova Reel<br/>Engaging videos]
-    D --> G[🎮 MRAID Games<br/>Interactive playables (planned)]
-    
-    E --> H[📊 Performance Analysis<br/>Analytics dashboard with<br/>mock campaign data]
-    F --> H
-    G --> H
-    
-    H --> I[🔄 Optimize & Iterate<br/>Apply insights to<br/>next campaign]
-    I --> A
+flowchart LR
+    A[🏢 Brand Selection] --> B[📝 Brief Generation]
+    B --> C[🎨 Content Creation]
+    C --> D[📊 Analytics]
+    D --> A
     
     style A fill:#e1f5fe
-    style C fill:#f3e5f5
-    style H fill:#e8f5e8
-    style I fill:#fff3e0
+    style B fill:#f3e5f5
+    style C fill:#ffeaa7
+    style D fill:#e8f5e8
 ```
 
 
@@ -128,8 +117,7 @@ Want to see AdCaleidoscope in action? Follow this quick demo:
 3. **Create a Brief**: Go to `/briefs/new` and select "Business Empire" or any brand
 4. **See Smart Matching**: Watch AI match relevant creatives by keywords
 5. **Generate**: Click "Generate from Brief" to see Nova Pro in action
-6. **Test Playables**: Visit `/playground` to try interactive MRAID games
-7. **Analyze Performance**: Check `/patterns` for comprehensive analytics dashboard
+6. **Analyze Performance**: Check `/patterns` for comprehensive analytics dashboard
 
 
 

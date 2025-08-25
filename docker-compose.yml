@@ -22,16 +22,6 @@ services:
     networks:
       - adalchemy-network
 
-  # DuckDB for analytics (optional container for data processing)
-  duckdb:
-    image: duckdb/duckdb:latest
-    container_name: adalchemy-duckdb
-    volumes:
-      - "./data:/data"
-    networks:
-      - adalchemy-network
-    command: ["tail", "-f", "/dev/null"]  # Keep container running
-
 networks:
   adalchemy-network:
     driver: bridge

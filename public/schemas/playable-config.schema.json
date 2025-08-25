@@ -1,0 +1,391 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Playable Ad Configuration",
+  "description": "Configuration schema for interactive playable advertisements",
+  "type": "object",
+  "required": ["name", "version", "dimensions", "gameplay", "ui", "events", "metadata"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the playable ad",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the playable (e.g., '1.0.0')"
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Canvas dimensions for the playable",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 300,
+          "maximum": 2048,
+          "description": "Canvas width in pixels"
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 300,
+          "maximum": 2048,
+          "description": "Canvas height in pixels"
+        }
+      }
+    },
+    "orientation": {
+      "type": "string",
+      "enum": ["portrait", "landscape", "square"],
+      "description": "Preferred orientation for the playable",
+      "default": "portrait"
+    },
+    "assets": {
+      "type": "object",
+      "description": "Asset references used in the playable",
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Array of image asset URLs"
+        },
+        "sounds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Array of audio asset URLs"
+        },
+        "fonts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of font family names"
+        }
+      }
+    },
+    "gameplay": {
+      "type": "object",
+      "description": "Gameplay configuration and mechanics",
+      "required": ["type", "duration", "difficulty"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["puzzle", "arcade", "rpg", "strategy", "simulation", "casual", "runner", "match3", "card", "action"],
+          "description": "Type of gameplay mechanics"
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 120,
+          "description": "Expected gameplay duration in seconds"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard"],
+          "description": "Difficulty level for target audience"
+        },
+        "tutorial": {
+          "type": "boolean",
+          "description": "Whether tutorial is included",
+          "default": true
+        },
+        "levels": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Number of playable levels"
+        },
+        "autoplay": {
+          "type": "boolean",
+          "description": "Whether gameplay starts automatically",
+          "default": false
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "description": "User interface configuration",
+      "required": ["showCloseButton", "safeArea"],
+      "properties": {
+        "showCloseButton": {
+          "type": "boolean",
+          "description": "Whether to show close button",
+          "default": true
+        },
+        "showSoundToggle": {
+          "type": "boolean",
+          "description": "Whether to show sound on/off toggle",
+          "default": true
+        },
+        "customClose": {
+          "type": "boolean",
+          "description": "Use custom close button styling",
+          "default": false
+        },
+        "safeArea": {
+          "type": "object",
+          "description": "Safe area margins for UI elements",
+          "required": ["top", "bottom", "left", "right"],
+          "properties": {
+            "top": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Top safe area margin in pixels"
+            },
+            "bottom": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Bottom safe area margin in pixels"
+            },
+            "left": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Left safe area margin in pixels"
+            },
+            "right": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Right safe area margin in pixels"
+            }
+          }
+        },
+        "theme": {
+          "type": "object",
+          "description": "Visual theme configuration",
+          "properties": {
+            "primaryColor": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$",
+              "description": "Primary brand color (hex format)"
+            },
+            "secondaryColor": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$",
+              "description": "Secondary brand color (hex format)"
+            },
+            "fontFamily": {
+              "type": "string",
+              "description": "Primary font family"
+            }
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "object",
+      "description": "MRAID and custom events configuration",
+      "required": ["required"],
+      "properties": {
+        "required": {
+          "type": "array",
+          "description": "Events that must be implemented",
+          "items": {
+            "$ref": "#/definitions/PlayableEvent"
+          },
+          "minItems": 1
+        },
+        "optional": {
+          "type": "array",
+          "description": "Optional events for enhanced tracking",
+          "items": {
+            "$ref": "#/definitions/PlayableEvent"
+          }
+        }
+      }
+    },
+    "store": {
+      "type": "object",
+      "description": "App store links for installation",
+      "properties": {
+        "ios": {
+          "type": "string",
+          "format": "uri",
+          "description": "iOS App Store URL"
+        },
+        "android": {
+          "type": "string",
+          "format": "uri",
+          "description": "Google Play Store URL"
+        },
+        "fallback": {
+          "type": "string",
+          "format": "uri",
+          "description": "Fallback URL for unsupported platforms"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata and configuration",
+      "required": ["title", "description", "category"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Marketing title for the playable"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Brief description of the gameplay"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10,
+          "description": "Keywords for categorization and search"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "action", "adventure", "arcade", "board", "card", "casino", 
+            "casual", "educational", "family", "music", "puzzle", "racing", 
+            "role-playing", "simulation", "sports", "strategy", "trivia", "word"
+          ],
+          "description": "App store category"
+        },
+        "ageRating": {
+          "type": "string",
+          "enum": ["4+", "9+", "12+", "17+"],
+          "description": "Age rating classification"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "description": "Primary language (ISO 639-1 format)"
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "description": "Target regions (ISO 3166-1 alpha-2 codes)"
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "description": "Performance optimization settings",
+      "properties": {
+        "maxFileSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maximum file size in MB"
+        },
+        "preloadAssets": {
+          "type": "boolean",
+          "description": "Whether to preload all assets",
+          "default": true
+        },
+        "compressionLevel": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Asset compression level",
+          "default": "medium"
+        },
+        "targetFPS": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 60,
+          "description": "Target frames per second",
+          "default": 60
+        }
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "description": "Analytics and tracking configuration",
+      "properties": {
+        "trackingEnabled": {
+          "type": "boolean",
+          "description": "Whether analytics tracking is enabled",
+          "default": true
+        },
+        "customEvents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "trigger"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Custom event name"
+              },
+              "trigger": {
+                "type": "string",
+                "enum": ["manual", "timer", "interaction", "gamestate"],
+                "description": "Event trigger type"
+              },
+              "parameters": {
+                "type": "object",
+                "description": "Additional event parameters"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "PlayableEvent": {
+      "type": "object",
+      "required": ["name", "trigger", "required"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "ready", "start", "engage", "level_complete", "achievement_unlock",
+            "endcard_view", "cta_click", "install_click", "close", "expand",
+            "pause", "resume", "sound_toggle", "tutorial_complete", "error"
+          ],
+          "description": "Standard event name"
+        },
+        "trigger": {
+          "type": "string",
+          "enum": ["manual", "timer", "interaction", "gamestate"],
+          "description": "How the event is triggered"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Event-specific parameters",
+          "properties": {
+            "delay": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Delay in milliseconds for timer triggers"
+            },
+            "condition": {
+              "type": "string",
+              "description": "Condition that must be met for the event"
+            }
+          }
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether this event is required for the playable to function properly"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the event purpose"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: adalchemy-localstack
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - DEBUG=1
+      - SERVICES=s3,dynamodb,sqs,sns,events,stepfunctions,lambda,logs
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LAMBDA_EXECUTOR=docker-reuse
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY:-}
+      - EXTRA_CORS_ALLOWED_ORIGINS=http://localhost:3000
+      - EXTRA_CORS_ALLOWED_HEADERS=*
+    volumes:
+      - "./localstack:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - adalchemy-network
+
+  # DuckDB for analytics (optional container for data processing)
+  duckdb:
+    image: duckdb/duckdb:latest
+    container_name: adalchemy-duckdb
+    volumes:
+      - "./data:/data"
+    networks:
+      - adalchemy-network
+    command: ["tail", "-f", "/dev/null"]  # Keep container running
+
+networks:
+  adalchemy-network:
+    driver: bridge
+
+volumes:
+  localstack-data:

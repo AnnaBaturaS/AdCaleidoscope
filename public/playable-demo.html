@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Playable Ad Demo</title>
+    <script src="/mraid/mraid-mock.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+        }
+        
+        #game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .tile {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .tile:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .tile.matched {
+            background: rgba(76, 217, 100, 0.5);
+            transform: rotateY(180deg);
+            pointer-events: none;
+        }
+        
+        .tile.selected {
+            background: rgba(255, 215, 0, 0.5);
+            transform: scale(0.95);
+        }
+        
+        #start-screen {
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        #start-screen h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        #start-screen p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        #score-display {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        #timer {
+            font-size: 20px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        #endcard {
+            display: none;
+            text-align: center;
+            max-width: 400px;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        #endcard h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        #endcard p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        #final-score {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            animation: pulse 2s infinite;
+        }
+        
+        #close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        #close-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="close-button" onclick="handleClose()">✕</div>
+    
+    <div id="game-container">
+        <div id="start-screen">
+            <h1>🎮 Memory Match</h1>
+            <p>Match all the pairs to win amazing rewards!</p>
+            <button class="button" onclick="startGame()">Play Now</button>
+        </div>
+        
+        <div id="game-screen" style="display: none;">
+            <div id="timer">Time: <span id="time-value">30</span>s</div>
+            <div id="score-display">Score: <span id="score-value">0</span></div>
+            <div id="game-board"></div>
+        </div>
+        
+        <div id="endcard">
+            <h2>🎉 Amazing!</h2>
+            <div id="final-score">0</div>
+            <p>You've mastered the game! Download now to unlock 100 more levels!</p>
+            <button class="button cta-button" onclick="handleCTA()">Download Now</button>
+            <button class="button" onclick="playAgain()" style="margin-top: 10px; background: rgba(255, 255, 255, 0.2);">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            score: 0,
+            moves: 0,
+            time: 30,
+            isPlaying: false,
+            selectedTiles: [],
+            matchedPairs: 0,
+            timerInterval: null
+        };
+
+        // Emoji tiles for matching
+        const emojis = ['🎨', '🎯', '🎪', '🎭', '🎬', '🎸'];
+        let tiles = [];
+
+        // MRAID Integration
+        function initMRAID() {
+            if (typeof mraid !== 'undefined') {
+                console.log('MRAID detected, initializing...');
+                
+                // Wait for MRAID to be ready
+                if (mraid.getState() === 'loading') {
+                    mraid.addEventListener('ready', onMraidReady);
+                } else {
+                    onMraidReady();
+                }
+            } else {
+                console.log('MRAID not available, running in standalone mode');
+                // Send ready event to parent
+                sendEventToParent('ready', {});
+            }
+        }
+
+        function onMraidReady() {
+            console.log('MRAID is ready');
+            mraid.setExpandProperties({
+                width: 320,
+                height: 480,
+                useCustomClose: false
+            });
+            
+            // Send ready event
+            sendEventToParent('ready', { version: mraid.getVersion() });
+        }
+
+        function sendEventToParent(eventType, data) {
+            // Send event to parent frame
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'mraid_event',
+                    payload: {
+                        type: eventType,
+                        timestamp: Date.now(),
+                        data: data,
+                        source: 'playable'
+                    }
+                }, '*');
+            }
+            
+            console.log('Event sent:', eventType, data);
+        }
+
+        function startGame() {
+            console.log('Starting game...');
+            
+            // Hide start screen, show game
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('endcard').style.display = 'none';
+            
+            // Initialize game
+            gameState = {
+                score: 0,
+                moves: 0,
+                time: 30,
+                isPlaying: true,
+                selectedTiles: [],
+                matchedPairs: 0,
+                timerInterval: null
+            };
+            
+            // Create tiles
+            createGameBoard();
+            
+            // Start timer
+            startTimer();
+            
+            // Send engage event
+            sendEventToParent('engage', { timestamp: Date.now() });
+            
+            // Create particle effects
+            createParticles();
+        }
+
+        function createGameBoard() {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            
+            // Create pairs of emojis
+            tiles = [];
+            for (let i = 0; i < emojis.length; i++) {
+                tiles.push(emojis[i], emojis[i]);
+            }
+            
+            // Shuffle tiles
+            tiles.sort(() => Math.random() - 0.5);
+            
+            // Create tile elements
+            tiles.forEach((emoji, index) => {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.dataset.index = index;
+                tile.dataset.emoji = emoji;
+                tile.textContent = '?';
+                tile.onclick = () => handleTileClick(tile);
+                board.appendChild(tile);
+            });
+        }
+
+        function handleTileClick(tile) {
+            if (!gameState.isPlaying) return;
+            if (tile.classList.contains('matched')) return;
+            if (tile.classList.contains('selected')) return;
+            if (gameState.selectedTiles.length >= 2) return;
+            
+            // Reveal tile
+            tile.classList.add('selected');
+            tile.textContent = tile.dataset.emoji;
+            gameState.selectedTiles.push(tile);
+            
+            // Check for match
+            if (gameState.selectedTiles.length === 2) {
+                gameState.moves++;
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [tile1, tile2] = gameState.selectedTiles;
+            
+            if (tile1.dataset.emoji === tile2.dataset.emoji) {
+                // Match found!
+                setTimeout(() => {
+                    tile1.classList.add('matched');
+                    tile2.classList.add('matched');
+                    tile1.classList.remove('selected');
+                    tile2.classList.remove('selected');
+                    
+                    gameState.matchedPairs++;
+                    gameState.score += 100;
+                    updateScore();
+                    
+                    // Check for win
+                    if (gameState.matchedPairs === emojis.length) {
+                        endGame(true);
+                    }
+                    
+                    gameState.selectedTiles = [];
+                }, 500);
+            } else {
+                // No match
+                setTimeout(() => {
+                    tile1.classList.remove('selected');
+                    tile2.classList.remove('selected');
+                    tile1.textContent = '?';
+                    tile2.textContent = '?';
+                    gameState.selectedTiles = [];
+                }, 1000);
+            }
+        }
+
+        function startTimer() {
+            gameState.timerInterval = setInterval(() => {
+                gameState.time--;
+                document.getElementById('time-value').textContent = gameState.time;
+                
+                if (gameState.time <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function updateScore() {
+            document.getElementById('score-value').textContent = gameState.score;
+        }
+
+        function endGame(won) {
+            gameState.isPlaying = false;
+            clearInterval(gameState.timerInterval);
+            
+            // Calculate final score with time bonus
+            if (won) {
+                gameState.score += gameState.time * 10;
+            }
+            
+            // Show endcard
+            setTimeout(() => {
+                document.getElementById('game-screen').style.display = 'none';
+                document.getElementById('endcard').style.display = 'block';
+                document.getElementById('final-score').textContent = gameState.score;
+                
+                // Send endcard event
+                sendEventToParent('endcard_view', { 
+                    score: gameState.score,
+                    won: won,
+                    moves: gameState.moves 
+                });
+            }, 500);
+        }
+
+        function handleCTA() {
+            console.log('CTA clicked');
+            
+            // Send CTA event
+            sendEventToParent('cta_click', { 
+                score: gameState.score,
+                timestamp: Date.now() 
+            });
+            
+            // Try to open store
+            if (typeof mraid !== 'undefined') {
+                mraid.open('https://apps.apple.com/app/id123456789');
+            } else {
+                window.open('https://apps.apple.com/app/id123456789', '_blank');
+            }
+        }
+
+        function handleClose() {
+            console.log('Close clicked');
+            
+            // Send close event
+            sendEventToParent('close', { timestamp: Date.now() });
+            
+            if (typeof mraid !== 'undefined') {
+                mraid.close();
+            }
+        }
+
+        function playAgain() {
+            startGame();
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                particle.style.animation = `float ${particle.style.animationDuration} linear infinite`;
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initMRAID();
+            createParticles();
+        });
+
+        // Handle viewport resize
+        window.addEventListener('resize', () => {
+            if (typeof mraid !== 'undefined') {
+                const maxSize = mraid.getMaxSize();
+                console.log('Max size:', maxSize);
+            }
+        });
+    </script>
+</body>
+</html>

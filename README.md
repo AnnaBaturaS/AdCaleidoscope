@@ -13,17 +13,6 @@
 Built specifically to showcase the power of **Amazon Nova models** in a real-world creative workflow, demonstrating how AI can revolutionize mobile advertising creative processes.
 
 
-## 🏗️ Architecture Overview
-
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   LOCAL MODE    │    │   CLOUD MODE    │    │   ANALYTICS     │
-│                 │    │                 │    │                 │
-│ • LocalStack    │◄──►│ • AWS Bedrock   │◄──►│ • In-Memory     │
-│ • Mock Services │    │ • Real AI Gen   │    │ • Performance   │
-│ • Development   │    │ • Production    │    │ • Insights      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-```
 
 ### 🛠️ Tech Stack
 - **Frontend**: Next.js 15, React 19, TypeScript, TailwindCSS
